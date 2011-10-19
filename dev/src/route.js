@@ -85,6 +85,22 @@
             return params;
         },
 
+        _getQuerystringArray : function(request) {
+            var querystringParams = {},
+                parts = request.split("?").pop().split("&"),
+                i = 0, l = parts.length, item;
+
+            for (; i < l; i++) {
+                item = parts[i].split("=");
+                var value = decodeURIComponent(item[1]);
+                if(value) {
+                  querystringParams[item[0]] = decodeURIComponent(item[1]);
+                }
+            }
+
+            return querystringParams;
+        },
+
         dispose : function(){
             this._router.removeRoute(this);
         },

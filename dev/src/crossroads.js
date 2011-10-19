@@ -41,12 +41,19 @@
 
         parse : function(request){
             request = request || '';
-            var route = this._getMatchedRoute(request),
-                params = route? route._getParamsArray(request) : null;
+            var route   = this._getMatchedRoute(request),
+                params  = route? route._getParamsArray(request) : null,
+                queries = route? route._getQuerystringArray(request) : null;
+
+            var routeData = {
+              queries: queries,
+              params: params
+            };
+
             if(route){
-                params? route.matched.dispatch.apply(route.matched, params) : route.matched.dispatch();
-                this.routed.dispatch(request, route, params);
-            }else{
+                route.matched.dispatch.call(route.matched, routeData);
+                this.routed.dispatch(request, route, routeData);
+            } else {
                 this.bypassed.dispatch(request);
             }
         },
